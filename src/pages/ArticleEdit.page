@@ -1,0 +1,179 @@
+<apex:page controller="cms.CreateContentController" extensions="Article"
+    showHeader="false" sidebar="false" cache="false" standardStylesheets="false">
+    <script>
+$(document).ready(init);
+
+/**
+ * Initializes the editor, populates all fields and enables the controls if applicable.
+ */
+function init() {
+    ce.content_editor('registerSaveFunction', getAttributes);
+
+    var isEnabled = ocmsEditorAPI.getEnabled();
+
+    $('#title').val('{!JSENCODE(title)}');
+    $('#body').val('{!JSENCODE(body)}');
+    $('#summary').val('{!JSENCODE(summary)}');
+
+    $('#thumbnailImageUrl').image_selector_input({
+        field_id: 'thumbnailImageUrl',
+        dialog_id: 'thumbnailImageUrl_dialog',
+        url: '{!JSENCODE(thumbnailImageUrl)}'
+    });
+
+    $('#thumbnailImageAlt').val('{!JSENCODE(thumbnailImageAlt)}');
+
+    CKEDITOR.replace('body', {
+        readOnly: !isEnabled
+    });
+
+    if(isEnabled) {
+        $('input, textarea').removeAttr('disabled');
+    }
+}
+
+/**
+ * Returns an array of OrchestraCMS attributes based on the current UI values.
+ */
+function getAttributes() {
+    var attributes = [];
+    var bodyChunks;
+
+    attributes.push({
+        name: 'title',
+        value: $('#title').val(),
+        type: 'Text',
+        simple: true
+    });
+
+    attributes.push({
+        name: 'summary',
+        value: $('#summary').val(),
+        type: 'Text',
+        simple: true
+    });
+
+    // Process the body into 30kb chunks to split across several attribute (if necessary)
+    bodyChunks = chunkString(CKEDITOR.instances.body.getData());
+    attributes.push({
+        name: 'bodyChunkCount',
+        value: bodyChunks.length.toString(),
+        type: 'Integer',
+        simple: true
+    });
+
+    bodyChunks.forEach(function(chunk, i) {
+        attributes.push({
+            name: 'body_' + i,
+            value: chunk,
+            type: 'Rich Text'
+        });
+    });
+
+    attributes.push({
+        name: 'thumbnailImageUrl',
+        value: $('#thumbnailImageUrl').image_selector_input('getSelected'),
+        type: 'Text',
+        simple: true
+    });
+
+    attributes.push({
+        name: 'thumbnailImageAlt',
+        value: $('#thumbnailImageAlt').val(),
+        type: 'Text',
+        simple: true
+    });
+
+    return attributes;
+}
+
+/**
+ * Breaks a string into a set of 30kb chunks that can be stored in several Salesforce Long Text fields.
+ */
+function chunkString(str) {
+    var CHUNK_SIZE = 32768;
+    var chunkList = [];
+    var cursor = 0;
+
+    while(cursor < str.length) {
+        chunkList.push(str.substr(cursor, CHUNK_SIZE));
+        cursor += CHUNK_SIZE;
+    }
+
+    return chunkList;
+}
+
+/**
+ * Initializes a "characters remaining" counter for any inputs or textareas with both maxlength and data-charCountId
+ * attributes.
+ */
+$(document).ready(function initializeCharacterCounters() {
+    // Process all inputs and textareas with a maxlength attribute
+    $('input[maxlength], textarea[maxlength]').each(function() {
+        var input = $(this);
+        var charCountId = input.attr('data-charCountId');
+        var isInitialized = input.attr('data-initialized') === 'true';
+
+        if(charCountId !== undefined && !isInitialized) {
+            input.keyup(characterCounterUpdateHandler);
+            input.bind('paste', function() {
+                // The past event fires before the input value actually updates
+                setTimeout(characterCounterUpdateHandler.bind(this), 0);
+            });
+
+            characterCounterUpdateHandler.call(input);
+            input.attr('data-initialized', 'true');
+        }
+    });
+
+    function characterCounterUpdateHandler() {
+        var input = $(this);
+
+        var charCountId = input.attr('data-charCountId');
+        var inputLength = input.val().length;
+        var maxLength = parseInt(input.attr('maxlength'));
+        var charsRemaining = maxLength - inputLength;
+
+        $('#' + charCountId).text(charsRemaining);
+    }
+});
+    </script>
+
+    <table class="ocmsContentEditor ocmsContentEditorNested">
+        <tr>
+            <td>
+                <label class="ocmsLabel" for="title">Article Title</label>
+                <input class="ocmsTextInputLrg" type="text" id="title" disabled="disabled" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="ocmsLabel" for="body">Body Text</label>
+                <textarea id="body"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="ocmsLabel" for="summary">Summary</label>
+                <textarea id="summary" maxlength="150" data-charCountId="summary_charCount"
+                    rows="5" cols="65" disabled="disabled"></textarea>
+                <p class="ocmsHelpText">
+                    (<span id="summary_charCount"></span> of 150 characters remaining)
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="ocmsLabel">Thumbnail Image</label>
+                <div id="thumbnailImageUrl"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="ocmsLabel" for="thumbnailImageAlt">Thumbnail Image Alternative Text</label>
+                <input type="text" id="thumbnailImageAlt" disabled="disabled" />
+                <p class="ocmsHelpText">This text is provided to screenreaders to describe the image.</p>
+            </td>
+        </tr>
+    </table>
+</apex:page>
