@@ -2,7 +2,7 @@
  * Provides getHTML implementations for the content templates "ArticleSummary" and "ArticleDetail" as well as attribute
  * accessors for the Article content editor.
  */
-global abstract with sharing class Article extends cms.ContentTemplateController {
+global virtual with sharing class Article extends cms.ContentTemplateController {
     public String getArticleSummaryHtml() {
         String html = '';
 
@@ -45,28 +45,28 @@ global abstract with sharing class Article extends cms.ContentTemplateController
     /** A thumbnail image, used by ArticleSummary */
     public String thumbnailImageUrl {
         get {
-            return getProperty('thumbnailImageUrl');
+            return getAttribute('thumbnailImageUrl');
         } set;
     }
 
     /** Alternate text for a thumbnail image for screenreaders, used by ArticleSummary */
     public String thumbnailImageAlt {
         get {
-            return getProperty('thumbnailImageAlt');
+            return getAttribute('thumbnailImageAlt');
         } set;
     }
 
     /** The title of an article, used by ArticleSummary and ArticleDetail */
     public String title {
         get {
-            return getProperty('title');
+            return getAttribute('title');
         } set;
     }
 
     /** A short summary of an article, used by ArticleSummary */
     public String summary {
         get {
-            return getProperty('summary');
+            return getAttribute('summary');
         } set;
     }
 
@@ -77,7 +77,7 @@ global abstract with sharing class Article extends cms.ContentTemplateController
      */
     public Integer bodyChunkCount {
         get {
-            String bodyChunkCountString = getProperty('bodyChunkCount');
+            String bodyChunkCountString = getAttribute('bodyChunkCount');
 
             if(bodyChunkCountString == null) {
                 // Default to 0 chunks (no body)
@@ -90,7 +90,7 @@ global abstract with sharing class Article extends cms.ContentTemplateController
                 // Not a valid integer - assume no chunks
                 return 0;
             }
-        }
+        } set;
     }
 
     /**
@@ -104,7 +104,7 @@ global abstract with sharing class Article extends cms.ContentTemplateController
 
                 // Reassemble the chunked body
                 for(Integer i = 0; i < bodyChunkCount; i++) {
-                    String chunk = getProperty('body_' + i);
+                    String chunk = getAttribute('body_' + i);
 
                     if(chunk != null) {
                         body += chunk;
@@ -114,6 +114,21 @@ global abstract with sharing class Article extends cms.ContentTemplateController
 
             return body;
         } set;
+    }
+
+    /** Provides an easy way to define attributes during testing */
+    @TestVisible
+    private Map<String, String> testAttributes = new Map<String, String>();
+
+    /** Delegates to ContentTemplateController#getProperty in normal execution. Accesses the {@link #testAttributes}
+     * map in a test context.
+     */
+    private String getAttribute(String attributeName) {
+        if(Test.isRunningTest()) {
+            return testAttributes.get(attributeName);
+        } else {
+            return getProperty(attributeName);
+        }
     }
 
     /** Extension constructor for the Article edit page */
