@@ -1,5 +1,5 @@
 @isTest
-private with sharing class ArticleTest {
+private with sharing class Article_Test {
     private static String title = 'my_article_title';
     private static String summary = 'my_article_summary';
     private static String body = '<my><html><body>';

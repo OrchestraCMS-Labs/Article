@@ -6,7 +6,7 @@ global virtual with sharing class Article extends cms.ContentTemplateController 
     public String getArticleSummaryHtml() {
         String html = '';
 
-        Boolean hasImage = !String.isBlank(thumbnailImageUrl);
+        Boolean hasImage = String.isNotBlank(thumbnailImageUrl);
 
         if(hasImage) {
             html += '<article class="media">'

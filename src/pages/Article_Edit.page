@@ -139,41 +139,43 @@ $(document).ready(function initializeCharacterCounters() {
 });
     </script>
 
-    <table class="ocmsContentEditor ocmsContentEditorNested">
-        <tr>
-            <td>
-                <label class="ocmsLabel" for="title">Article Title</label>
-                <input class="ocmsTextInputLrg" type="text" id="title" disabled="disabled" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label class="ocmsLabel" for="body">Body Text</label>
-                <textarea id="body"></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label class="ocmsLabel" for="summary">Summary</label>
-                <textarea id="summary" maxlength="150" data-charCountId="summary_charCount"
-                    rows="5" cols="65" disabled="disabled"></textarea>
-                <p class="ocmsHelpText">
-                    (<span id="summary_charCount"></span> of 150 characters remaining)
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label class="ocmsLabel">Thumbnail Image</label>
-                <div id="thumbnailImageUrl"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label class="ocmsLabel" for="thumbnailImageAlt">Thumbnail Image Alternative Text</label>
-                <input type="text" id="thumbnailImageAlt" disabled="disabled" />
-                <p class="ocmsHelpText">This text is provided to screenreaders to describe the image.</p>
-            </td>
-        </tr>
-    </table>
+    <form>
+        <table class="ocmsContentEditor ocmsContentEditorNested">
+            <tr>
+                <td>
+                    <label class="ocmsLabel" for="title">Article Title</label>
+                    <input class="ocmsTextInputLrg" type="text" id="title" disabled="disabled" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="ocmsLabel" for="body">Body Text</label>
+                    <textarea id="body"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="ocmsLabel" for="summary">Summary</label>
+                    <textarea id="summary" maxlength="150" data-charCountId="summary_charCount"
+                        rows="5" cols="65" disabled="disabled"></textarea>
+                    <p class="ocmsHelpText">
+                        (<span id="summary_charCount"></span> of 150 characters remaining)
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="ocmsLabel">Thumbnail Image</label>
+                    <div id="thumbnailImageUrl"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="ocmsLabel" for="thumbnailImageAlt">Thumbnail Image Alternative Text</label>
+                    <input type="text" id="thumbnailImageAlt" disabled="disabled" />
+                    <p class="ocmsHelpText">This text is provided to screenreaders to describe the image.</p>
+                </td>
+            </tr>
+        </table>
+    </form>
 </apex:page>
