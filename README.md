@@ -4,13 +4,13 @@
 
 1. [Summary](#summary)
     1. [Compatibility](#compatibility)
-    2. [Prerequisites](#prerequisites)
-    3. [Deployment](#deployment)
-    4. [Configuration](#configuration)
-2. [Versioning](#versioning)
+    1. [Prerequisites](#prerequisites)
+    1. [Deployment](#deployment)
+    1. [Configuration](#configuration)
+1. [Versioning](#versioning)
     1. [Major Versions](#major-versions)
-    2. [Minor Versions](#minor-versions)
-    3. [Patch Versions](#patch-versions)
+    1. [Minor Versions](#minor-versions)
+    1. [Patch Versions](#patch-versions)
 
 <!-- /MarkdownTOC -->
 
@@ -37,9 +37,9 @@ This content type requires a minimum of OchestraCMS package 7.184 (Winter 2016, 
     1. Article.cls
     2. ArticleSummary.cls
     3. ArticleDetail.cls
-    4. ArticleTest.cls
+    4. Article_Test.cls
 2. Deploy the following Visualforce pages to the target Salesforce organization
-    1. ArticleEdit.page
+    1. Article_Edit.page
 
 <a name="configuration"></a>
 ### Configuration
@@ -52,7 +52,7 @@ Label : Article Detail
 Controller : ArticleDetail
 isPageCacheable : true
 isContentCacheable : true
-Visualforce Edit : c__ArticleEdit
+Visualforce Edit : c__Article_Edit
 ```
 
 ```
@@ -61,7 +61,7 @@ Label : Article Summary
 Controller : ArticleSummary
 isPageCacheable : true
 isContentCacheable : true
-Visualforce Edit : c__ArticleEdit
+Visualforce Edit : c__Article_Edit
 ```
 
 On the target OrchestraCMS site create the following content type(s) and add content templates as indicated.
