@@ -9,15 +9,19 @@ global virtual with sharing class Article extends cms.ContentTemplateController 
         Boolean hasImage = !String.isBlank(thumbnailImageUrl);
 
         if(hasImage) {
-            html += '<article>'
-                    + '<a href="" class="ocms-title-taxonomy-detail-link">'
-                        + '<img'
-                            + ' src="' + thumbnailImageUrl.escapeHtml4() + '"'
-                            + ' alt="' + thumbnailImageAlt.escapeHtml4() + '"'
-                        + '>'
-                        + '<h1>' + title.escapeHtml4() + '</h1>'
+            html += '<article class="media">'
+                    + '<div class="media-left">'
+                        + '<a href="" class="ocms-title-taxonomy-detail-link">'
+                            + '<img'
+                                + ' src="' + thumbnailImageUrl.escapeHtml4() + '"'
+                                + ' alt="' + thumbnailImageAlt.escapeHtml4() + '"'
+                            + '>'
+                        + '</a>'
+                    + '</div>'
+                    + '<div class="media-body">'
+                        + '<h1><a href="" class="ocms-title-taxonomy-detail-link">' + title.escapeHtml4() + '</a></h1>'
                         + '<p>' + summary.escapeHtml4() + '</p>'
-                    + '</a>'
+                    + '</div>'
                 + '</article>';
         } else { // !hasImage
             html += '<article>'
